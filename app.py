@@ -14,7 +14,7 @@ app=Flask(__name__)
 
 # load the model, and pass in the custom metric function
 global graph
-model = load_model('covidlarge19.h5')
+model = load_model('covidNet-v2.h5')
 
 # initialize these variables
 
@@ -57,8 +57,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['upload_folder'], filename))
             x=cv2.imread(os.path.join(app.config['upload_folder'], filename), cv2.IMREAD_GRAYSCALE)
-            x=cv2.resize(x,(150,150))
-            x=np.array(x).reshape(1, 150, 150, 1) 
+            x=cv2.resize(x,(112,112))
+            x=np.array(x).reshape(1, 112, 112, 3) 
             out = np.rint(model.predict(x))
             int_pred=np.argmax(out, axis=-1)
             if int_pred==0:
