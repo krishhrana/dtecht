@@ -56,9 +56,11 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['upload_folder'], filename))
-            x=cv2.imread(os.path.join(app.config['upload_folder'], filename), cv2.IMREAD_GRAYSCALE)
+            x=cv2.imread(os.path.join(app.config['upload_folder'], filename))
+            x = cv2.cvtColor(x, cv2.COLOR_BGR2RGB )
             x=cv2.resize(x,(112,112))
             x=np.array(x).reshape(1, 112, 112, 3) 
+            x=x/255
             out = np.rint(model.predict(x))
             int_pred=np.argmax(out, axis=-1)
             if int_pred==0:
